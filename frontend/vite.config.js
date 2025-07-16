@@ -4,6 +4,13 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   
+  // Configuración de resolución de módulos
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
+  
   // Configuración del servidor de desarrollo
   server: {
     proxy: {
@@ -14,15 +21,14 @@ export default defineConfig({
     },
   },
   
-  // Configuración de build para producción
+  // Configuración de build para desarrollo
   build: {
-    // Optimizaciones de rendimiento
-    minify: 'terser',
+    // Optimizaciones básicas
+    minify: 'esbuild',
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          utils: ['axios'],
         },
       },
     },
@@ -33,7 +39,7 @@ export default defineConfig({
   
   // Configuración de optimización
   optimizeDeps: {
-    include: ['react', 'react-dom', 'axios'],
+    include: ['react', 'react-dom'],
   },
   
   // Configuración de test
