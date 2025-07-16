@@ -141,7 +141,7 @@ export function SearchBar({
             aria-controls="autocomplete-listbox"
             aria-activedescendant={highlightedIndex >= 0 ? `autocomplete-item-${highlightedIndex}` : undefined}
             className="w-full rounded-xl border border-white/30 bg-white/15 text-white placeholder-white/75
-                       py-3 pl-12 pr-4 text-lg outline-none
+                       py-3 px-4 text-lg outline-none
                        focus:border-white focus:ring-2 focus:ring-white
                        transition-all duration-200
                        backdrop-blur-md"
