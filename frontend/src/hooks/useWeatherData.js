@@ -5,6 +5,7 @@ export function useWeatherData(language) {
   const [forecastData, setForecastData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [lastSearch, setLastSearch] = useState(null);
 
   // Obtiene la base URL según variable de entorno o fallback
   const getBaseUrl = () => {
@@ -52,7 +53,24 @@ export function useWeatherData(language) {
       return;
     }
 
-    setLoading(true);
+    // Crear una clave única para esta búsqueda
+    const searchKey = typeof locationOrCoords === 'string' 
+      ? locationOrCoords.trim().toLowerCase()
+      : `${locationOrCoords.lat},${locationOrCoords.lon}`;
+
+    // Evitar búsquedas duplicadas
+    if (loading || lastSearch === searchKey) {
+      console.log('Búsqueda duplicada o en progreso, ignorando:', searchKey);
+      return;
+    }
+
+    setLastSearch(searchKey);
+
+    // Pequeño delay para evitar parpadeo en cambios rápidos
+    const loadingTimeout = setTimeout(() => {
+      setLoading(true);
+    }, 100);
+
     setError(null);
 
     try {
@@ -104,12 +122,16 @@ export function useWeatherData(language) {
       console.log('Weather data received:', data);
       setWeatherData(data.weather);
       setForecastData(data.forecast);
+      // Limpiar la última búsqueda para permitir búsquedas futuras
+      setLastSearch(null);
     } catch (e) {
       console.error('Fetch error:', e);
       setError(`Error al obtener datos: ${e.message}`);
       setWeatherData(null);
       setForecastData(null);
+      setLastSearch(null);
     } finally {
+      clearTimeout(loadingTimeout);
       setLoading(false);
     }
   };

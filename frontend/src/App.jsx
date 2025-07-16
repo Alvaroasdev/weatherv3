@@ -55,7 +55,9 @@ function App() {
   };
 
   const handleSelectSuggestion = (suggestion) => {
-    setLocation(`${suggestion.name}, ${suggestion.country}`);
+    const locationText = `${suggestion.name}, ${suggestion.country}`;
+    setLocation(locationText);
+    // Usar coordenadas directamente para evitar doble búsqueda
     fetchWeather({ lat: suggestion.lat, lon: suggestion.lon });
     setShowDetails(true);
   };
@@ -75,6 +77,19 @@ function App() {
       default: return 'from-blue-400 via-blue-500 to-blue-600';
     }
   };
+
+  // Estado para controlar el fondo sin parpadeo
+  const [currentBackground, setCurrentBackground] = useState('from-blue-400 via-blue-500 to-blue-600');
+  
+  // Actualizar fondo solo cuando cambie el clima, no durante la carga
+  React.useEffect(() => {
+    if (weatherData && !loading) {
+      const newBackground = getBackgroundGradient();
+      if (newBackground !== currentBackground) {
+        setCurrentBackground(newBackground);
+      }
+    }
+  }, [weatherData, loading]);
 
   const processForecastData = () => {
     if (!forecastData) return [];
@@ -128,7 +143,7 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${getBackgroundGradient()} transition-all duration-700 relative overflow-hidden`}>
+    <div className={`min-h-screen bg-gradient-to-br ${currentBackground} transition-all duration-1000 ease-in-out relative overflow-hidden`}>
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
@@ -225,7 +240,7 @@ function App() {
             )}
             
             {loading && (
-              <div className="mt-4 flex items-center justify-center space-x-3 text-white text-base">
+              <div className="mt-4 flex items-center justify-center space-x-3 text-white text-base animate-fade-in">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
                 <span>{texts[language].loading}</span>
               </div>
@@ -233,8 +248,8 @@ function App() {
           </div>
 
           {/* Weather Display - Unified container with animations */}
-          {showDetails && weatherData ? (
-            <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl animate-fade-in-up" style={{animationDelay: '0.5s'}}>
+          {showDetails && weatherData && !loading ? (
+            <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl animate-fade-in-up transition-all duration-500 ease-in-out" style={{animationDelay: '0.5s'}}>
               <div className="grid grid-cols-1 xl:grid-cols-5 gap-8">
                 {/* Current Weather - 60% on left */}
                 <div className="xl:col-span-3">
@@ -347,7 +362,7 @@ function App() {
               </div>
             </div>
           ) : (
-            !loading && (
+            !loading && !weatherData && (
               <div className="text-center text-white animate-fade-in-up">
                 <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-16 max-w-lg mx-auto border border-white/5 hover:bg-white/15 transition-all duration-500">
                   <div className="text-8xl mb-8 animate-bounce-slow">🌤️</div>
@@ -367,53 +382,53 @@ function App() {
         }
         
         @keyframes slide-in-left {
-          from { transform: translateX(-50px); opacity: 0; }
+          from { transform: translateX(-30px); opacity: 0; }
           to { transform: translateX(0); opacity: 1; }
         }
         
         @keyframes slide-in-right {
-          from { transform: translateX(50px); opacity: 0; }
+          from { transform: translateX(30px); opacity: 0; }
           to { transform: translateX(0); opacity: 1; }
         }
         
         @keyframes fade-in-up {
-          from { transform: translateY(30px); opacity: 0; }
+          from { transform: translateY(20px); opacity: 0; }
           to { transform: translateY(0); opacity: 1; }
         }
         
         @keyframes bounce-slow {
           0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
+          50% { transform: translateY(-8px); }
         }
         
         @keyframes shake {
           0%, 100% { transform: translateX(0); }
-          10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-          20%, 40%, 60%, 80% { transform: translateX(5px); }
+          10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+          20%, 40%, 60%, 80% { transform: translateX(3px); }
         }
         
         .animate-fade-in {
-          animation: fade-in 0.8s ease-out;
+          animation: fade-in 1s ease-out;
         }
         
         .animate-slide-in-left {
-          animation: slide-in-left 0.8s ease-out;
+          animation: slide-in-left 1s ease-out;
         }
         
         .animate-slide-in-right {
-          animation: slide-in-right 0.8s ease-out;
+          animation: slide-in-right 1s ease-out;
         }
         
         .animate-fade-in-up {
-          animation: fade-in-up 0.8s ease-out;
+          animation: fade-in-up 1s ease-out;
         }
         
         .animate-bounce-slow {
-          animation: bounce-slow 3s ease-in-out infinite;
+          animation: bounce-slow 4s ease-in-out infinite;
         }
         
         .animate-shake {
-          animation: shake 0.5s ease-in-out;
+          animation: shake 0.6s ease-in-out;
         }
       `}</style>
     </div>
