@@ -10,6 +10,7 @@
     "dev:frontend": "cd frontend && npm run dev"
   },
   "devDependencies": {
-    "concurrently": "^7.0.0"
+    "concurrently": "^7.0.0",
+    "terser": "^5.43.1"
   }
 }
