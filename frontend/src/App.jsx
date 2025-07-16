@@ -128,77 +128,86 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${getBackgroundGradient()} transition-all duration-700`}>
-      <div className="container mx-auto px-4 py-6 sm:py-8">
+    <div className={`min-h-screen bg-gradient-to-br ${getBackgroundGradient()} transition-all duration-700 relative overflow-hidden`}>
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/3 rounded-full blur-3xl animate-pulse" style={{animationDelay: '4s'}}></div>
+      </div>
+
+      <div className="container mx-auto px-4 py-6 relative z-10">
         <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 sm:mb-8">
-            <button
-              onClick={async () => {
-                const permission = window.confirm(
-                  language === 'es'
-                    ? '¿Deseas permitir el acceso a tu ubicación para obtener el clima actual?'
-                    : 'Do you want to allow access to your location to get the current weather?'
-                );
-                if (!permission) return;
-                if (!navigator.geolocation) {
-                  alert(
+          {/* Header - Minimalist with animations */}
+          <div className="flex justify-between items-center mb-8 animate-fade-in">
+            <div className="text-white">
+              <h1 className="text-3xl lg:text-4xl font-bold animate-slide-in-left">
+                {capitalizeFirst(
+                  new Date().toLocaleDateString(
+                    language === 'es' ? 'es-ES' : 'en-US',
+                    {
+                      weekday: 'long',
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                    }
+                  )
+                )}
+              </h1>
+            </div>
+            
+            <div className="flex space-x-4">
+              <button
+                onClick={async () => {
+                  const permission = window.confirm(
                     language === 'es'
-                      ? 'La geolocalización no es compatible con tu navegador.'
-                      : 'Geolocation is not supported by your browser.'
+                      ? '¿Deseas permitir el acceso a tu ubicación para obtener el clima actual?'
+                      : 'Do you want to allow access to your location to get the current weather?'
                   );
-                  return;
-                }
-                navigator.geolocation.getCurrentPosition(
-                  (position) => {
-                    const { latitude, longitude } = position.coords;
-                    fetchWeather({ lat: latitude, lon: longitude });
-                    setShowDetails(true);
-                  },
-                  (err) => {
+                  if (!permission) return;
+                  if (!navigator.geolocation) {
                     alert(
                       language === 'es'
-                        ? 'No se pudo obtener tu ubicación.'
-                        : 'Unable to retrieve your location.'
+                        ? 'La geolocalización no es compatible con tu navegador.'
+                        : 'Geolocation is not supported by your browser.'
                     );
-                    console.error(err);
+                    return;
                   }
-                );
-              }}
-              className="w-full sm:w-auto flex items-center justify-center sm:justify-start space-x-2 bg-white/20 backdrop-blur-md rounded-full px-4 py-2 text-white hover:bg-white/30 transition-all duration-300"
-            >
-              <span className="text-lg">📍</span>
-              <span>{texts[language].useLocation}</span>
-            </button>
-            
-            <button
-              onClick={() => setLanguage((prev) => (prev === 'es' ? 'en' : 'es'))}
-              className="w-full sm:w-auto flex items-center justify-center sm:justify-start space-x-2 bg-white/20 backdrop-blur-md rounded-full px-4 py-2 text-white hover:bg-white/30 transition-all duration-300"
-            >
-              <span className="text-lg">🌐</span>
-              <span>{language === 'es' ? 'English' : 'Español'}</span>
-            </button>
+                  navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                      const { latitude, longitude } = position.coords;
+                      fetchWeather({ lat: latitude, lon: longitude });
+                      setShowDetails(true);
+                    },
+                    (err) => {
+                      alert(
+                        language === 'es'
+                          ? 'No se pudo obtener tu ubicación.'
+                          : 'Unable to retrieve your location.'
+                      );
+                      console.error(err);
+                    }
+                  );
+                }}
+                className="bg-white/10 backdrop-blur-md rounded-full px-4 py-3 text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 animate-slide-in-right flex items-center space-x-2"
+              >
+                <span className="text-xl">📍</span>
+                <span className="text-sm font-medium">{texts[language].useLocation}</span>
+              </button>
+              
+              <button
+                onClick={() => setLanguage((prev) => (prev === 'es' ? 'en' : 'es'))}
+                className="bg-white/10 backdrop-blur-md rounded-full px-4 py-3 text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 animate-slide-in-right flex items-center space-x-2"
+                style={{animationDelay: '0.2s'}}
+              >
+                <span className="text-xl">🌐</span>
+                <span className="text-sm font-medium">{language === 'es' ? 'English' : 'Español'}</span>
+              </button>
+            </div>
           </div>
 
-          {/* Current Date */}
-          <div className="text-center mb-6 sm:mb-8">
-            <h1 className="text-xl sm:text-2xl font-light text-white/90">
-              {capitalizeFirst(
-                new Date().toLocaleDateString(
-                  language === 'es' ? 'es-ES' : 'en-US',
-                  {
-                    weekday: 'long',
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                  }
-                )
-              )}
-            </h1>
-          </div>
-
-          {/* Search Bar */}
-          <div className="max-w-2xl mx-auto mb-6 sm:mb-8">
+          {/* Search Bar - Minimalist with animations */}
+          <div className="max-w-lg mx-auto mb-8 animate-fade-in" style={{animationDelay: '0.3s'}}>
             <SearchBar
               value={location}
               onChange={setLocation}
@@ -210,122 +219,125 @@ function App() {
             />
             
             {error && (
-              <div className="mt-4 bg-red-500/20 backdrop-blur-md rounded-2xl p-4 text-white text-center">
+              <div className="mt-4 bg-red-500/20 backdrop-blur-md rounded-xl p-4 text-white text-center text-base animate-shake">
                 ⚠️ {error}
               </div>
             )}
             
             {loading && (
-              <div className="mt-4 flex items-center justify-center space-x-3 text-white">
+              <div className="mt-4 flex items-center justify-center space-x-3 text-white text-base">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
                 <span>{texts[language].loading}</span>
               </div>
             )}
           </div>
 
-          {/* Weather Display */}
+          {/* Weather Display - Unified container with animations */}
           {showDetails && weatherData ? (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Current Weather */}
-              <div className="lg:col-span-2">
-                <div className="bg-white/20 backdrop-blur-md rounded-3xl p-6 sm:p-8 text-white">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                    <div>
-                      <h2 className="text-2xl sm:text-3xl font-light mb-2">
-                        {weatherData.name}, {getCountryName(weatherData.sys.country, language)}
-                      </h2>
-                      <div className="flex items-center space-x-2 text-white/70">
-                        <span className="text-sm">🕒</span>
-                        <span className="text-sm sm:text-base">
+            <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl animate-fade-in-up" style={{animationDelay: '0.5s'}}>
+              <div className="grid grid-cols-1 xl:grid-cols-5 gap-8">
+                {/* Current Weather - 60% on left */}
+                <div className="xl:col-span-3">
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-white border border-white/5 hover:bg-white/15 transition-all duration-500 h-full flex flex-col">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
+                      <div className="animate-slide-in-left">
+                        <div className="text-lg text-white/70 mb-2">{texts[language].today}</div>
+                        <h2 className="text-3xl lg:text-4xl font-light mb-3">
+                          {weatherData.name}, {getCountryName(weatherData.sys.country, language)}
+                        </h2>
+                        <div className="text-lg text-white/70">
                           {texts[language].lastUpdate}{' '}
                           {new Date(weatherData.dt * 1000).toLocaleTimeString(
                             language === 'es' ? 'es-ES' : 'en-US',
                             { hour: '2-digit', minute: '2-digit' }
                           )}
-                        </span>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="text-center">
-                      <img
-                        src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@4x.png`}
-                        alt={weatherData.weather[0].description}
-                        className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-4"
-                      />
-                      <div className="text-5xl sm:text-6xl font-light mb-2">
-                        {Math.round(weatherData.main.temp)}°C
-                      </div>
-                      <div className="text-lg sm:text-xl text-white/80">
-                        {translateWeatherDescription(
-                          weatherData.weather[0].description,
-                          language
-                        )}
+                      
+                      <div className="flex items-center space-x-8 mt-6 lg:mt-0 animate-slide-in-right">
+                        <div className="text-center hover:scale-105 transition-transform duration-300">
+                          <div className="text-lg text-white/70 mb-2">💧 {texts[language].humidity}</div>
+                          <div className="text-2xl lg:text-3xl">{weatherData.main.humidity}%</div>
+                        </div>
+                        <div className="text-center hover:scale-105 transition-transform duration-300">
+                          <div className="text-lg text-white/70 mb-2">🌬️ {texts[language].wind}</div>
+                          <div className="text-2xl lg:text-3xl">{(weatherData.wind.speed * 3.6).toFixed(1)} km/h</div>
+                        </div>
+                        <div className="text-center hover:scale-105 transition-transform duration-300">
+                          <div className="text-lg text-white/70 mb-2">🌧️ {language === 'es' ? 'Lluvia' : 'Rain'}</div>
+                          <div className="text-2xl lg:text-3xl">
+                            {weatherData.rain ? Math.round(weatherData.rain['1h'] || weatherData.rain['3h'] || 0) : 0}%
+                          </div>
+                        </div>
                       </div>
                     </div>
                     
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-2xl text-blue-300">💧</span>
-                        <div>
-                          <div className="text-sm text-white/70">{texts[language].humidity}</div>
-                          <div className="text-xl">{weatherData.main.humidity}%</div>
+                    <div className="flex items-center justify-center lg:justify-start space-x-6 animate-fade-in-up flex-1">
+                      <img
+                        src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@4x.png`}
+                        alt={weatherData.weather[0].description}
+                        className="w-28 h-28 lg:w-32 lg:h-32 animate-bounce-slow"
+                      />
+                      <div className="text-center lg:text-left">
+                        <div className="text-6xl lg:text-7xl font-light mb-3 animate-pulse">
+                          {Math.round(weatherData.main.temp)}°C
                         </div>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <span className="text-2xl text-gray-300">🌬️</span>
-                        <div>
-                          <div className="text-sm text-white/70">{texts[language].wind}</div>
-                          <div className="text-xl">{(weatherData.wind.speed * 3.6).toFixed(1)} km/h</div>
+                        <div className="text-xl lg:text-2xl text-white/80">
+                          {translateWeatherDescription(
+                            weatherData.weather[0].description,
+                            language
+                          )}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              
-              {/* Forecast */}
-              <div className="lg:col-span-1">
-                <div className="bg-white/20 backdrop-blur-md rounded-3xl p-4 sm:p-6 text-white">
-                  <h3 className="text-lg sm:text-xl font-light mb-4 sm:mb-6 text-center">
-                    {texts[language].forecast}
-                  </h3>
-                  <div className="space-y-3 sm:space-y-4">
+                
+                {/* Forecast - 40% on right */}
+                <div className="xl:col-span-2">
+                  <div className="space-y-3 lg:space-y-4 h-full">
                     {processForecastData().map((item, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-3 sm:p-4 bg-white/10 rounded-2xl">
-                        <div className="flex items-center space-x-2 sm:space-x-3">
-                          <img
-                            src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
-                            alt={item.weather[0].description}
-                            className="w-8 h-8 sm:w-10 sm:h-10"
-                          />
-                          <div>
-                            <div className="text-sm sm:text-base font-medium">
-                              {titleCase(
-                                new Date(item.dt * 1000).toLocaleDateString(
-                                  language === 'es' ? 'es-ES' : 'en-US',
-                                  { weekday: 'short' }
-                                )
-                              )}
+                      <div 
+                        key={idx} 
+                        className="bg-white/10 backdrop-blur-md rounded-xl p-4 lg:p-5 text-white hover:bg-white/20 hover:scale-105 transition-all duration-300 border border-white/5 animate-slide-in-right"
+                        style={{animationDelay: `${0.6 + idx * 0.1}s`}}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3 lg:space-x-4">
+                            <img
+                              src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
+                              alt={item.weather[0].description}
+                              className="w-12 h-12 lg:w-14 lg:h-14 animate-pulse"
+                            />
+                            <div className="min-w-0 flex-1">
+                              <div className="text-base lg:text-lg font-medium truncate">
+                                <span className="font-bold">{titleCase(
+                                  new Date(item.dt * 1000).toLocaleDateString(
+                                    language === 'es' ? 'es-ES' : 'en-US',
+                                    { weekday: 'long' }
+                                  )
+                                )}</span>
+                              </div>
+                              <div className="text-sm lg:text-base text-white/70 truncate">
+                                {titleCase(
+                                  translateWeatherDescription(
+                                    item.weather[0].description,
+                                    language
+                                  )
+                                )}
+                              </div>
                             </div>
-                            <div className="text-xs sm:text-sm text-white/70">
-                              {translateWeatherDescription(
-                                item.weather[0].description,
-                                language
-                              )}
+                          </div>
+                          <div className="text-right ml-2">
+                            <div className="text-base lg:text-lg font-medium">
+                              {Math.round(item.main.temp_max)}°/{Math.round(item.main.temp_min)}°
                             </div>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-sm sm:text-base font-medium">
-                            {Math.round(item.main.temp_max)}°/{Math.round(item.main.temp_min)}°
-                          </div>
-                          <div className="text-xs sm:text-sm text-white/70">
-                            {item.main.humidity}% 💧
-                          </div>
-                          <div className="text-xs sm:text-sm text-white/70">
-                            {(item.wind.speed * 3.6).toFixed(1)} km/h
+                            <div className="text-sm lg:text-base text-white/70">
+                              {item.main.humidity}% 💧
+                            </div>
+                            <div className="text-sm lg:text-base text-white/70">
+                              {(item.wind.speed * 3.6).toFixed(1)} km/h 🌬️
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -336,17 +348,74 @@ function App() {
             </div>
           ) : (
             !loading && (
-              <div className="text-center text-white">
-                <div className="bg-white/20 backdrop-blur-md rounded-3xl p-8 sm:p-12 max-w-md mx-auto">
-                  <div className="text-5xl sm:text-6xl mb-4 sm:mb-6">🌤️</div>
-                  <h2 className="text-xl sm:text-2xl font-light mb-3 sm:mb-4">{texts[language].startMessage}</h2>
-                  <p className="text-sm sm:text-base text-white/80">{texts[language].searchHint}</p>
+              <div className="text-center text-white animate-fade-in-up">
+                <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-16 max-w-lg mx-auto border border-white/5 hover:bg-white/15 transition-all duration-500">
+                  <div className="text-8xl mb-8 animate-bounce-slow">🌤️</div>
+                  <h2 className="text-3xl lg:text-4xl font-light mb-6">{texts[language].startMessage}</h2>
+                  <p className="text-xl text-white/80">{texts[language].searchHint}</p>
                 </div>
               </div>
             )
           )}
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes slide-in-left {
+          from { transform: translateX(-50px); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slide-in-right {
+          from { transform: translateX(50px); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes fade-in-up {
+          from { transform: translateY(30px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+          20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .animate-fade-in {
+          animation: fade-in 0.8s ease-out;
+        }
+        
+        .animate-slide-in-left {
+          animation: slide-in-left 0.8s ease-out;
+        }
+        
+        .animate-slide-in-right {
+          animation: slide-in-right 0.8s ease-out;
+        }
+        
+        .animate-fade-in-up {
+          animation: fade-in-up 0.8s ease-out;
+        }
+        
+        .animate-bounce-slow {
+          animation: bounce-slow 3s ease-in-out infinite;
+        }
+        
+        .animate-shake {
+          animation: shake 0.5s ease-in-out;
+        }
+      `}</style>
     </div>
   );
 }

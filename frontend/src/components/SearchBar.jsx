@@ -173,12 +173,10 @@ export function SearchBar({
                   handleSelect(suggestion);
                 }}
                 onMouseEnter={() => setHighlightedIndex(index)}
-                className={`flex items-center gap-2 px-5 py-3 cursor-pointer text-white text-base
+                className={`flex items-center gap-2 px-1 py-3 cursor-pointer text-white text-base
                             ${isHighlighted ? 'bg-white text-gray-900' : 'hover:bg-white/20'}`}
               >
-                <span aria-hidden="true" className="text-lg select-none">
-                  📍
-                </span>
+                
                 <span>
                   {suggestion.name}
                   {suggestion.state && `, ${suggestion.state}`}, {suggestion.countryName || suggestion.country}
