@@ -154,8 +154,8 @@ function App() {
       <div className="container mx-auto px-4 py-6 relative z-10">
         <div className="max-w-6xl mx-auto">
           {/* Header - Minimalist with animations */}
-          <div className="flex justify-between items-center mb-8 animate-fade-in">
-            <div className="text-white">
+          <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center mb-8 animate-fade-in">
+            <div className="text-white w-full text-center sm:text-left">
               <h1 className="text-3xl lg:text-4xl font-bold animate-slide-in-left">
                 {capitalizeFirst(
                   new Date().toLocaleDateString(
@@ -170,8 +170,7 @@ function App() {
                 )}
               </h1>
             </div>
-            
-            <div className="flex space-x-4">
+            <div className="flex flex-row w-full justify-center sm:justify-end space-x-4 mt-2 sm:mt-0">
               <button
                 onClick={async () => {
                   const permission = window.confirm(
@@ -249,18 +248,18 @@ function App() {
 
           {/* Weather Display - Unified container with animations */}
           {showDetails && weatherData && !loading ? (
-            <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10 shadow-2xl animate-fade-in-up transition-all duration-500 ease-in-out" style={{animationDelay: '0.5s'}}>
-              <div className="grid grid-cols-1 xl:grid-cols-5 gap-8">
+            <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-4 sm:p-8 border border-white/10 shadow-2xl animate-fade-in-up transition-all duration-500 ease-in-out" style={{animationDelay: '0.5s'}}>
+              <div className="flex flex-col xl:grid xl:grid-cols-5 gap-4 xl:gap-8">
                 {/* Current Weather - 60% on left */}
                 <div className="xl:col-span-3">
-                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-white border border-white/5 hover:bg-white/15 transition-all duration-500 h-full flex flex-col">
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-8 text-white border border-white/5 hover:bg-white/15 transition-all duration-500 h-full flex flex-col">
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
                       <div className="animate-slide-in-left">
                         <div className="text-lg text-white/70 mb-2">{texts[language].today}</div>
-                        <h2 className="text-3xl lg:text-4xl font-light mb-3">
+                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light mb-3">
                           {weatherData.name}, {getCountryName(weatherData.sys.country, language)}
                         </h2>
-                        <div className="text-lg text-white/70">
+                        <div className="text-base sm:text-lg text-white/70">
                           {texts[language].lastUpdate}{' '}
                           {new Date(weatherData.dt * 1000).toLocaleTimeString(
                             language === 'es' ? 'es-ES' : 'en-US',
@@ -268,36 +267,41 @@ function App() {
                           )}
                         </div>
                       </div>
-                      
-                      <div className="flex items-center space-x-8 mt-6 lg:mt-0 animate-slide-in-right">
-                        <div className="text-center hover:scale-105 transition-transform duration-300">
-                          <div className="text-lg text-white/70 mb-2">💧 {texts[language].humidity}</div>
-                          <div className="text-2xl lg:text-3xl">{weatherData.main.humidity}%</div>
+                      <div className="flex flex-row w-full justify-center lg:justify-end items-center gap-2 sm:gap-8 mt-4 lg:mt-0 animate-slide-in-right">
+                        <div className="flex flex-col items-center min-w-[70px]">
+                          <div className="text-base sm:text-lg text-white/70 mb-1">💧 {texts[language].humidity}</div>
+                          <div className="flex items-center justify-center text-xl sm:text-2xl lg:text-3xl font-medium">
+                            {weatherData.main.humidity}
+                            <span className="ml-1 text-base lg:text-lg">%</span>
+                          </div>
                         </div>
-                        <div className="text-center hover:scale-105 transition-transform duration-300">
-                          <div className="text-lg text-white/70 mb-2">🌬️ {texts[language].wind}</div>
-                          <div className="text-2xl lg:text-3xl">{(weatherData.wind.speed * 3.6).toFixed(1)} km/h</div>
+                        <div className="flex flex-col items-center min-w-[90px]">
+                          <div className="text-base sm:text-lg text-white/70 mb-1">🌬️ {texts[language].wind}</div>
+                          <div className="flex items-center justify-center text-xl sm:text-2xl lg:text-3xl font-medium">
+                            {(weatherData.wind.speed * 3.6).toFixed(1)}
+                            <span className="ml-1 text-base lg:text-lg">km/h</span>
+                          </div>
                         </div>
-                        <div className="text-center hover:scale-105 transition-transform duration-300">
-                          <div className="text-lg text-white/70 mb-2">🌧️ {language === 'es' ? 'Lluvia' : 'Rain'}</div>
-                          <div className="text-2xl lg:text-3xl">
-                            {weatherData.rain ? Math.round(weatherData.rain['1h'] || weatherData.rain['3h'] || 0) : 0}%
+                        <div className="flex flex-col items-center min-w-[70px]">
+                          <div className="text-base sm:text-lg text-white/70 mb-1">🌧️ {language === 'es' ? 'Lluvia' : 'Rain'}</div>
+                          <div className="flex items-center justify-center text-xl sm:text-2xl lg:text-3xl font-medium">
+                            {weatherData.rain ? Math.round(weatherData.rain['1h'] || weatherData.rain['3h'] || 0) : 0}
+                            <span className="ml-1 text-base lg:text-lg">%</span>
                           </div>
                         </div>
                       </div>
                     </div>
-                    
-                    <div className="flex items-center justify-center lg:justify-start space-x-6 animate-fade-in-up flex-1">
+                    <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-6 animate-fade-in-up flex-1">
                       <img
                         src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@4x.png`}
                         alt={weatherData.weather[0].description}
-                        className="w-28 h-28 lg:w-32 lg:h-32 animate-bounce-slow"
+                        className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 animate-bounce-slow"
                       />
-                      <div className="text-center lg:text-left">
-                        <div className="text-6xl lg:text-7xl font-light mb-3 animate-pulse">
+                      <div className="text-center sm:text-left">
+                        <div className="text-5xl sm:text-6xl lg:text-7xl font-light mb-3 animate-pulse">
                           {Math.round(weatherData.main.temp)}°C
                         </div>
-                        <div className="text-xl lg:text-2xl text-white/80">
+                        <div className="text-lg sm:text-xl lg:text-2xl text-white/80">
                           {translateWeatherDescription(
                             weatherData.weather[0].description,
                             language
@@ -307,14 +311,13 @@ function App() {
                     </div>
                   </div>
                 </div>
-                
                 {/* Forecast - 40% on right */}
                 <div className="xl:col-span-2">
                   <div className="space-y-3 lg:space-y-4 h-full">
                     {processForecastData().map((item, idx) => (
                       <div 
                         key={idx} 
-                        className="bg-white/10 backdrop-blur-md rounded-xl p-4 lg:p-5 text-white hover:bg-white/20 hover:scale-105 transition-all duration-300 border border-white/5 animate-slide-in-right"
+                        className="bg-white/10 backdrop-blur-md rounded-xl p-3 sm:p-4 lg:p-5 text-white hover:bg-white/20 hover:scale-105 transition-all duration-300 border border-white/5 animate-slide-in-right"
                         style={{animationDelay: `${0.6 + idx * 0.1}s`}}
                       >
                         <div className="flex items-center justify-between">
@@ -322,7 +325,7 @@ function App() {
                             <img
                               src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
                               alt={item.weather[0].description}
-                              className="w-12 h-12 lg:w-14 lg:h-14 animate-pulse"
+                              className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 animate-pulse"
                             />
                             <div className="min-w-0 flex-1">
                               <div className="text-base lg:text-lg font-medium truncate">

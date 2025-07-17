@@ -28,6 +28,25 @@ export default async function handler(req, res) {
     return res.status(204).end();
   }
 
+  // Rate limiting: máximo 20 peticiones por IP cada 60 segundos
+  const RATE_LIMIT = 20;
+  const WINDOW_SECONDS = 60;
+
+  if (USE_UPSTASH) {
+    const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress || 'unknown';
+    const key = `ratelimit:${ip}`;
+    // Intenta incrementar el contador
+    const resp = await upstashFetch(`/incr/${key}`, { method: 'POST' });
+    const count = resp.result ? parseInt(resp.result) : 0;
+    if (count === 1) {
+      // Primera vez, establece expiración
+      await upstashFetch(`/expire/${key}/${WINDOW_SECONDS}`, { method: 'POST' });
+    }
+    if (count > RATE_LIMIT) {
+      return res.status(429).json({ error: 'Demasiadas peticiones, intenta de nuevo en un minuto.' });
+    }
+  }
+
   try {
     if (USE_UPSTASH) {
       // En producción con Upstash, pero sin límite

@@ -9,13 +9,13 @@
 A continuación puedes ver cómo se ve la aplicación en diferentes estados:
 
 ### Antes de la llamada a la API
-![Pantalla inicial, antes de buscar el clima](public/screenshots/beforecall.webp)
+![Pantalla inicial, antes de buscar el clima](frontend/public/screenshots/beforecall.webp)
 
 ### Después de la llamada (día soleado)
-![Clima soleado tras buscar una ciudad](public/screenshots/aftercall.webp)
+![Clima soleado tras buscar una ciudad](frontend/public/screenshots/aftercall.webp)
 
 ### Día nublado (en español)
-![Clima nublado mostrado en español](public/screenshots/nublado.webp)
+![Clima nublado mostrado en español](frontend/public/screenshots/nublado.webp)
 
 ---
 
