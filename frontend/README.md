@@ -1,127 +1,128 @@
-# 🌤️ Weather Info - React + OpenWeather
+# 🌤️ Best Weather Web - App del Clima con React
 
-Aplicación web moderna para consultar el clima actual y pronóstico de 4/5 días. Diseño minimalista y responsive.
-
-![React](https://img.shields.io/badge/React-18.0+-blue?style=for-the-badge&logo=react)
-![Vite](https://img.shields.io/badge/Vite-5.0+-purple?style=for-the-badge&logo=vite)
+¡Bienvenido/a! Este es un proyecto sencillo para consultar el clima actual y el pronóstico de los próximos días usando React, Vite y la API de OpenWeather. Ideal para practicar y aprender como desarrollador/a junior.
 
 ---
 
-## ✨ Características
+## 🖼️ Vista previa
 
-- **Clima Actual**: Temperatura, humedad, viento, probabilidad de lluvia
-- **Pronóstico 4/5 Días**: Información detallada día a día
-- **Búsqueda Inteligente**: Autocompletado de ciudades con API real
-- **Ubicación GPS**: Obtener clima de tu ubicación actual
-- **Diseño Responsive**: Perfecto en móvil, tablet y desktop
-- **Español/Inglés**: Cambio de idioma en tiempo real
+A continuación puedes ver cómo se ve la aplicación en diferentes estados:
 
----
+### Antes de la llamada a la API
+![Pantalla inicial, antes de buscar el clima](public/screenshots/beforecall.webp)
 
-## 🛠️ Tecnologías
+### Después de la llamada (día soleado)
+![Clima soleado tras buscar una ciudad](public/screenshots/aftercall.webp)
 
-- **React** - Biblioteca de UI
-- **Vite** - Build tool y dev server
-- **Tailwind CSS** - Framework de estilos
-- **OpenWeather API** - Datos meteorológicos
+### Día nublado (en español)
+![Clima nublado mostrado en español](public/screenshots/nublado.webp)
 
 ---
 
-## 🚀 Instalación Rápida
+## 🚀 ¿Qué hace esta app?
+- Muestra el clima actual de una ciudad (temperatura, humedad, viento, etc.)
+- Permite buscar ciudades con autocompletado
+- Puedes ver el pronóstico de los próximos 4/5 días
+- Opción para ver el clima de tu ubicación actual (usando GPS)
+- Cambia entre español e inglés fácilmente
+- Diseño adaptable a móvil, tablet y PC
 
-### 1. Obtener API Key
-1. Ve a [OpenWeather](https://openweathermap.org/)
-2. Crea cuenta gratuita y obtén tu API key
+---
 
-### 2. Configurar Proyecto
+## 🛠️ Tecnologías usadas
+- **React**: Biblioteca para construir interfaces de usuario
+- **Vite**: Herramienta para desarrollo rápido de proyectos en React
+- **Tailwind CSS**: Framework para estilos rápidos y modernos
+- **OpenWeather API**: Provee los datos del clima
 
+---
+
+## 📦 Instalación paso a paso
+
+### 1. Clona el repositorio y entra a la carpeta del frontend
 ```bash
-# Clonar y instalar
-git clone https://github.com/tu-usuario/weather-app.git
-cd weather-app/frontend
-npm install
+git clone https://github.com/Alvaroasdev/weatherv3.git
+cd weatherv3/frontend
+```
 
-# Crear archivo de configuración
+### 2. Instala las dependencias
+```bash
+npm install
+```
+
+### 3. Consigue tu API Key de OpenWeather
+1. Ve a [OpenWeather](https://openweathermap.org/)
+2. Regístrate gratis y copia tu API key
+
+### 4. Crea el archivo de variables de entorno
+```bash
 echo "VITE_OPENWEATHER_API_KEY=tu_api_key_aqui" > .env.local
 ```
+Reemplaza `tu_api_key_aqui` por la clave que copiaste.
 
-### 3. Ejecutar
-
+### 5. Ejecuta la app en modo desarrollo
 ```bash
 npm run dev
 ```
-
-La app estará en `http://localhost:5173`
-
----
-
-## 🎯 Cómo Usar
-
-1. **Buscar ciudad**: Escribe en el campo de búsqueda y selecciona del autocompletado
-2. **Ubicación actual**: Haz clic en "📍 Usar ubicación"
-3. **Cambiar idioma**: Haz clic en "🌐 English/Español"
+Abre tu navegador en [http://localhost:5173](http://localhost:5173)
 
 ---
 
-## 🔧 Configuración
-
-### Variables de Entorno (.env.local)
-```env
-# Solo frontend
-VITE_OPENWEATHER_API_KEY=tu_api_key_aqui
-
-# Con backend (opcional)
-VITE_BACKEND_URL=http://localhost:3000
-```
-
-### Backend (Opcional)
-Si quieres usar el backend incluido:
-
-```bash
-cd backend
-npm install
-echo "API_KEY=tu_api_key_aqui" > .env.local
-npm run dev
-```
+## 📝 Consejos para juniors
+- Si algo no funciona, revisa la consola del navegador y la terminal para ver errores.
+- Asegúrate de tener la API key correcta y de esperar unos minutos si la acabas de crear.
+- Si tienes problemas con CORS, intenta usar el backend incluido (ver abajo).
+- Lee los comentarios en el código, te ayudarán a entender cómo funciona cada parte.
 
 ---
 
-## 📊 Límites API
-
-- **1000 requests/día** (gratuito)
-- **Suficiente** para desarrollo y uso personal
-- **Fallback** con ciudades populares si se agota
+## ⚙️ Variables de entorno
+- `VITE_OPENWEATHER_API_KEY`: Tu clave de OpenWeather (obligatoria)
+- `VITE_BACKEND_URL`: (Opcional) URL del backend si decides usarlo
 
 ---
 
-## 🐛 Problemas Comunes
-
-- **Autocompletado no funciona**: Verifica que tienes la API key configurada
-- **Error de CORS**: Solo ocurre si usas backend (verifica que esté corriendo)
-- **API key inválida**: Espera 2 horas después de crear la key
+## 🖥️ ¿Quieres usar el backend opcional?
+1. Ve a la carpeta `backend`
+2. Instala dependencias: `npm install`
+3. Crea `.env.local` con tu API key: `echo "API_KEY=tu_api_key_aqui" > .env.local`
+4. Ejecuta: `npm run dev`
 
 ---
 
-## 🚀 Despliegue
+## 🐞 Problemas comunes y soluciones
+- **No funciona el autocompletado**: Verifica tu API key
+- **Error de CORS**: Usa el backend local
+- **API key inválida**: Espera unos minutos tras crearla
 
-### Vercel (Recomendado)
-```bash
-npm i -g vercel
-vercel
-```
+---
 
-### Netlify
-```bash
-npm run build
-# Subir carpeta dist a Netlify
-```
+## 📚 Recursos útiles
+- [Documentación de React](https://es.react.dev/)
+- [Guía de Vite](https://vitejs.dev/guide/)
+- [Tailwind CSS](https://tailwindcss.com/docs/installation)
+- [API de OpenWeather](https://openweathermap.org/api)
 
 ---
 
 ## 📄 Licencia
-
 MIT License
 
 ---
 
-⭐ **Si te gusta este proyecto, ¡dale una estrella!**
+⭐ **Si te sirvió este proyecto, ¡dale una estrella y sigue aprendiendo!**
+
+---
+
+## 💡 Qué aprendí haciendo este proyecto
+- Cómo consumir APIs externas en React
+- Uso de hooks personalizados
+- Manejo de variables de entorno
+- Buenas prácticas con Tailwind y Vite
+
+---
+
+## 🤝 Contribuciones
+¡Las contribuciones son bienvenidas! Si encuentras un error o tienes una mejora, abre un issue o haz un pull request.
+
+---
